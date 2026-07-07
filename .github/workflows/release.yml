@@ -33,19 +33,22 @@ jobs:
           name: linux-build
           path: dist/*.AppImage
 
-  # 2. Windows 빌드 (Wine 컨테이너)
+  # 2. Windows 빌드 (네이티브 Windows 러너)
   build-windows:
-    runs-on: ubuntu-latest
-    container:
-      image: electronuserland/builder:wine
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Install npm deps
         run: npm ci
       - name: Build Python binary
+        shell: bash
         run: bash build/build-python.sh
       - name: Build Electron app
         run: npm run dist -- --win --publish never
