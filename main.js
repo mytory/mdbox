@@ -10,28 +10,45 @@ process.stderr.on('error', () => {});
 let mainWindow = null;
 
 // ── Python converter 경로 ──────────────────────────────
-function getConverterConfig() {
-    const isDev = !app.isPackaged;
+// ASAR 환경에서 unpacked 바이너리를 찾기 위해 경로 치환
+function unpackedPath(p) {
+    if (typeof p !== 'string') return p;
+    return p.replace('app.asar', 'app.asar.unpacked');
+}
 
-    // 1순위: PyInstaller 바이너리 (배포/개발 모두 사용 가능)
+function getConverterConfig() {
     const binaryName = process.platform === 'win32' ? 'converter.exe' : 'converter';
-    const binaryPath = path.join(__dirname, 'python', 'dist', binaryName);
+
+    // 1순위: PyInstaller 바이너리 (app.asar.unpacked > __dirname)
+    const binaryPath = unpackedPath(path.join(__dirname, 'python', 'dist', binaryName));
     if (fs.existsSync(binaryPath)) {
         return { cmd: binaryPath, args: [] };
     }
 
-    // 2순위: .venv의 python3 (개발 모드)
-    const venvPython = path.join(__dirname, '.venv', 'bin', 'python3');
-    const venvPythonWin = path.join(__dirname, '.venv', 'Scripts', 'python.exe');
-    if (fs.existsSync(venvPython)) {
-        return { cmd: venvPython, args: [path.join(__dirname, 'python', 'converter.py')] };
-    }
-    if (fs.existsSync(venvPythonWin)) {
-        return { cmd: venvPythonWin, args: [path.join(__dirname, 'python', 'converter.py')] };
+    // 2순위: __dirname 그대로 (개발 모드)
+    const devBinaryPath = path.join(__dirname, 'python', 'dist', binaryName);
+    if (fs.existsSync(devBinaryPath)) {
+        return { cmd: devBinaryPath, args: [] };
     }
 
-    // 3순위: 시스템 python3 (pip install markitdown 필요)
+    // 3순위: .venv의 python3 (개발 모드)
+    const venvPython = path.join(__dirname, '.venv', 'bin', 'python3');
+    const venvPythonWin = path.join(__dirname, '.venv', 'Scripts', 'python.exe');
     const scriptPath = path.join(__dirname, 'python', 'converter.py');
+    if (fs.existsSync(venvPython)) {
+        return { cmd: venvPython, args: [scriptPath] };
+    }
+    if (fs.existsSync(venvPythonWin)) {
+        return { cmd: venvPythonWin, args: [scriptPath] };
+    }
+
+    // 4순위: 시스템 python3 + unpacked converter.py
+    const unpackedScript = unpackedPath(scriptPath);
+    if (fs.existsSync(unpackedScript)) {
+        return { cmd: 'python3', args: [unpackedScript] };
+    }
+
+    // 5순위: 시스템 python3 + converter.py (실패 가능성 있음)
     return { cmd: 'python3', args: [scriptPath] };
 }
 
