@@ -1,0 +1,65 @@
+{
+  "name": "mytory-mdbox",
+  "version": "0.1.0",
+  "description": "Drop any file. Get Markdown. No questions asked.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "build:python": "bash build/build-python.sh",
+    "test:python": "python3 -m pytest tests/ -v"
+  },
+  "keywords": ["markdown", "converter", "electron", "markitdown"],
+  "author": {
+    "name": "mytory",
+    "email": "mail@mytory.net",
+    "url": "https://mytory.net"
+  },
+  "license": "GPL-3.0-only",
+  "type": "commonjs",
+  "supportedArchitectures": {
+    "os": ["darwin", "linux", "win32"],
+    "cpu": ["x64", "arm64"]
+  },
+  "devDependencies": {
+    "electron": "^42.3.0",
+    "electron-builder": "^26.8.1"
+  },
+  "build": {
+    "appId": "net.mytory.mdbox",
+    "productName": "Mytory MDBox",
+    "directories": {
+      "output": "dist"
+    },
+    "compression": "maximum",
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "!renderer/**/*.map"
+    ],
+    "asar": true,
+    "asarUnpack": [
+      "python/dist/converter/**/*"
+    ],
+    "mac": {
+      "icon": "build/icon.png",
+      "target": ["dmg"],
+      "artifactName": "${name}-v${version}-${arch}.${ext}",
+      "category": "public.app-category.utilities",
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false
+    },
+    "win": {
+      "icon": "build/icon.ico",
+      "target": ["nsis"],
+      "artifactName": "${name}-Setup-v${version}.${ext}"
+    },
+    "linux": {
+      "icon": "build/icon-transparent-bg.png",
+      "target": "AppImage",
+      "artifactName": "${name}-v${version}.${ext}"
+    }
+  }
+}

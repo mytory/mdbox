@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mytory MDBox</title>
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 상단: 작업 큐 (sticky) -->
+        <section class="queue-panel" id="queuePanel">
+            <div class="queue-header">
+                <h2 class="queue-title">작업 큐</h2>
+                <span class="queue-count" id="queueCount">0</span>
+            </div>
+            <div class="queue-list" id="queueList">
+                <div class="queue-empty" id="queueEmpty">
+                    파일을 드롭하면 여기에 작업이 표시됩니다.
+                </div>
+            </div>
+        </section>
+
+        <!-- 중앙: 드롭존 -->
+        <main class="dropzone-area" id="dropzoneArea">
+            <div class="global-drop-overlay" id="globalDropOverlay">
+                <div class="global-drop-overlay__content">
+                    <div class="global-drop-overlay__icon">📄</div>
+                    <h2>파일을 놓아 변환</h2>
+                    <p>드롭한 모든 파일이 Markdown으로 변환됩니다</p>
+                </div>
+            </div>
+
+            <div class="dropzone" id="dropzone">
+                <div class="dropzone__icon">📄</div>
+                <h3 class="dropzone__title">파일을 드롭하세요</h3>
+                <p class="dropzone__desc">
+                    또는 클릭하여 파일 선택 &middot; 폴더도 가능
+                </p>
+                <button class="dropzone__btn" id="selectFilesBtn">파일 선택</button>
+                <input type="file" id="fileInput" multiple hidden>
+                <input type="file" id="folderInput" webkitdirectory hidden>
+                <div class="dropzone__formats">
+                    지원: DOCX, PPTX, XLSX, PDF, HTML, CSV, JSON, XML, EPUB, IPYNB, TXT, ZIP, 이미지
+                </div>
+            </div>
+        </main>
+
+        <!-- 설정 모달 -->
+        <div class="modal-overlay hidden" id="settingsModal">
+            <div class="modal">
+                <div class="modal__header">
+                    <h2>설정</h2>
+                    <button class="modal__close" id="settingsClose">&times;</button>
+                </div>
+                <div class="modal__body">
+                    <div class="setting-group">
+                        <label class="setting-label">출력 모드</label>
+                        <select id="settingOutputMode" class="setting-select">
+                            <option value="sidecar">Sidecar — 원본 폴더에 .md 생성</option>
+                            <option value="sidecar+clipboard">Sidecar + 클립보드 복사</option>
+                            <option value="custom">지정 폴더에 .md 생성</option>
+                            <option value="custom+clipboard">지정 폴더 + 클립보드 복사</option>
+                        </select>
+                    </div>
+                    <div class="setting-group hidden" id="outputDirGroup">
+                        <label class="setting-label">출력 폴더</label>
+                        <div class="setting-dir-picker">
+                            <input type="text" id="settingOutputDir" class="setting-input" readonly placeholder="폴더를 선택하세요">
+                            <button class="setting-btn" id="settingOutputDirBtn">찾아보기</button>
+                        </div>
+                    </div>
+                    <hr class="setting-divider">
+                    <div class="setting-group">
+                        <label class="setting-label">LLM 제공자 (이미지 캡셔닝용, 선택사항)</label>
+                        <input type="text" id="settingLlmEndpoint" class="setting-input" placeholder="OpenAI API 키 또는 Ollama 엔드포인트 URL">
+                    </div>
+                    <div class="setting-group">
+                        <label class="setting-label">LLM 모델명</label>
+                        <input type="text" id="settingLlmModel" class="setting-input" placeholder="예: gpt-4o, llama3.2-vision">
+                    </div>
+                </div>
+                <div class="modal__footer">
+                    <button class="modal__btn modal__btn--secondary" id="settingsCancel">취소</button>
+                    <button class="modal__btn modal__btn--primary" id="settingsSave">저장</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 토스트 알림 -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
