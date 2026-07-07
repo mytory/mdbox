@@ -69,7 +69,9 @@ function convertWithMarkitdown(filePath, llmConfig = null) {
         const config = getConverterConfig();
         const input = JSON.stringify({ file_path: filePath, llm_config: llmConfig || undefined });
 
-        const proc = spawn(config.cmd, config.args);
+        const proc = spawn(config.cmd, config.args, {
+            env: { ...process.env, PYTHONIOENCODING: 'utf-8' },
+        });
         _activeConversionProcess = proc;
 
         let stdout = '';
