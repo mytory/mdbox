@@ -1,6 +1,8 @@
 # AGENTS
 
-여러 영상 도구를 담은 크로스 플랫폼 엘렉트론 앱. ffmpeg, ffprobe를 내장함.
+뭐든지 Markdown 파일로 변환해 주는 GUI 앱. Markitdown을 기본 사용.
+
+tdd 스킬을 사용해 개발.
 
 ## 커밋 규칙
 
