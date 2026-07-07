@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mytory MDBox — 파일을 드롭하면 Markdown이 나옵니다</title>
+    <meta name="description" content="크로스플랫폼 데스크톱 앱. 파일을 드롭하면 즉시 Markdown으로 변환합니다. Microsoft Markitdown 기반. 묻지도 따지지도 않습니다.">
+    <meta property="og:title" content="Mytory MDBox">
+    <meta property="og:description" content="파일을 드롭하면 Markdown이 나옵니다. 묻지도, 따지지도 않습니다.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mytory.github.io/mdbox/ko/">
+    <meta name="theme-color" content="#fafaf9">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%233b82f6'/><text x='16' y='22' text-anchor='middle' fill='white' font-size='18' font-weight='bold'>M</text></svg>">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar__inner">
+            <a href="../" class="navbar__brand">
+                <span class="navbar__logo">M</span>
+                <span class="navbar__title">Mytory MDBox</span>
+            </a>
+            <div class="navbar__links">
+                <a href="#features" class="navbar__link">기능</a>
+                <a href="#download" class="navbar__link">다운로드</a>
+                <a href="#concept" class="navbar__link">아이디어</a>
+                <a href="https://github.com/mytory/mdbox" target="_blank" rel="noopener" class="navbar__link navbar__link--external">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                    GitHub
+                </a>
+            </div>
+            <button class="navbar__toggle" aria-label="메뉴 열기">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero__bg"></div>
+        <div class="hero__inner">
+            <div class="hero__content">
+                <div class="hero__eyebrow">v0.1.0 &middot; 크로스플랫폼 데스크톱 앱</div>
+                <h1 class="hero__title">
+                    파일을 드롭하면<br>
+                    <span class="hero__title--accent">Markdown이 나옵니다</span>
+                </h1>
+                <p class="hero__sub">
+                    묻지도, 따지지도 않습니다. 파일을 앱에 드롭하기만 하면 깔끔한 Markdown이 준비됩니다. Microsoft Markitdown 엔진 탑재.
+                </p>
+                <div class="hero__ctas">
+                    <a href="#download" class="btn btn--primary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        다운로드
+                    </a>
+                    <a href="#features" class="btn btn--ghost">
+                        기능 살펴보기
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <polyline points="19 12 12 19 5 12"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="hero__tech">
+                    <span>Electron 기반</span>
+                    <span class="hero__sep"></span>
+                    <span>Markitdown 내장</span>
+                    <span class="hero__sep"></span>
+                    <span>Windows &middot; macOS &middot; Linux</span>
+                </div>
+            </div>
+            <div class="hero__visual">
+                <figure class="hero__screenshot">
+                    <div class="placeholder">
+                        <div class="placeholder__icon">📄</div>
+                        <p>여기에 파일을 드롭하세요<br>또는 클릭하여 선택</p>
+                    </div>
+                </figure>
+            </div>
+        </div>
+    </section>
+
+    <!-- Language Selector -->
+    <nav class="lang-nav" aria-label="언어 선택">
+        <div class="lang-nav__inner">
+            <span class="lang-nav__label">이 페이지:</span>
+            <div class="lang-nav__links">
+                <a href="../" class="lang-nav__link"><span class="lang-nav__flag">🇺🇸</span> English</a>
+                <a href="./" class="lang-nav__link lang-nav__link--active" aria-current="page"><span class="lang-nav__flag">🇰🇷</span> 한국어</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Powered by -->
+    <section class="trusted">
+        <div class="trusted__inner">
+            <p class="trusted__label">기반 기술</p>
+            <div class="trusted__logos">
+                <span class="trusted__logo">Electron</span>
+                <span class="trusted__logo">Markitdown</span>
+                <span class="trusted__logo">Python</span>
+                <span class="trusted__logo">PyInstaller</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+        <div class="features__inner">
+            <div class="features__header">
+                <h2 class="features__title">드롭 하나로 끝</h2>
+                <p class="features__sub">가장 단순한 파일→Markdown 변환기. 드래그, 드롭, 끝. 다이얼로그도, 설정도, 마찰도 없습니다.</p>
+            </div>
+
+            <div class="features__grid">
+                <article class="feature-card feature-card--wide">
+                    <div class="feature-card__icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </div>
+                    <h3 class="feature-card__title">드롭앤던이</h3>
+                    <p class="feature-card__desc">UX의 전부입니다: 파일을 드롭하면 Markdown이 나옵니다. 프롬프트도, 설정 다이얼로그도, "어디에 저장할까요?"도 없습니다. 그냥 결과물이 준비됩니다. 단일 파일, 여러 파일, 폴더 전체 모두 지원.</p>
+                    <ul class="feature-card__tags">
+                        <li>단일 파일</li>
+                        <li>일괄 처리</li>
+                        <li>폴더 재귀</li>
+                    </ul>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-card__icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    </div>
+                    <h3 class="feature-card__title">오피스 문서</h3>
+                    <p class="feature-card__desc">DOCX, PPTX, XLSX를 깔끔한 Markdown으로 변환. 표는 Markdown 테이블로, 슬라이드는 제목으로, 스프레드시트는 데이터 테이블로.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-card__icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2zm0 0a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h2"/></svg>
+                    </div>
+                    <h3 class="feature-card__title">PDF 및 웹</h3>
+                    <p class="feature-card__desc">PDF 파일에서 텍스트를 추출하고 HTML 페이지를 Markdown으로 변환. 웹 문서 아카이빙이나 문서 내용 추출에 최적.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-card__icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><line x1="3" y1="3" x2="21" y2="21"/></svg>
+                    </div>
+                    <h3 class="feature-card__title">코드 및 데이터</h3>
+                    <p class="feature-card__desc">CSV는 테이블로, JSON과 XML은 코드 블록으로, IPYNB 노트북은 깔끔한 Markdown으로. 소스 코드는 그대로 보존.</p>
+                </article>
+
+                <article class="feature-card">
+                    <div class="feature-card__icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <h3 class="feature-card__title">EPUB 등</h3>
+                    <p class="feature-card__desc">EPUB 전자책, 이메일(.msg), ZIP 아카이브, 일반 텍스트 등 다양한 포맷 지원. 텍스트를 담을 수 있는 형식이라면 MDBox가 Markdown으로 추출합니다.</p>
+                </article>
+
+                <article class="feature-card feature-card--wide">
+                    <div class="feature-card__icon-wrap">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </div>
+                    <h3 class="feature-card__title">LLM 친화적 출력</h3>
+                    <p class="feature-card__desc">Markdown은 LLM의 모국어입니다. MDBox는 ChatGPT, Claude 등 모든 AI 도구에 바로 붙여넣을 수 있는 깔끔한 Markdown을 생성합니다. 선택적으로 OpenAI 호환 엔드포인트를 연결하면 이미지 자동 캡셔닝도 가능.</p>
+                    <ul class="feature-card__tags">
+                        <li>AI 최적화</li>
+                        <li>이미지 캡셔닝</li>
+                        <li>OpenAI / Ollama</li>
+                    </ul>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download -->
+    <section class="download" id="download">
+        <div class="download__inner">
+            <div class="download__header">
+                <div class="download__eyebrow">시작하기</div>
+                <h2 class="download__title"><span class="download__title-name">Mytory MDBox</span> 다운로드</h2>
+                <p class="download__sub">무료 오픈소스. 계정 불필요. 파일이 내 컴퓨터를 떠나지 않습니다.</p>
+            </div>
+            <div class="download__platforms">
+                <div class="platform-card__wrapper">
+                    <a href="https://github.com/mytory/mdbox/releases/download/v0.1.0/mytory-mdbox-v0.1.0-arm64.dmg" target="_blank" rel="noopener" class="platform-card">
+                        <svg class="platform-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8"/>
+                            <path d="M12 17v4"/>
+                        </svg>
+                        <h3 class="platform-card__title">macOS</h3>
+                        <p class="platform-card__desc">Apple Silicon (ARM)</p>
+                        <span class="platform-card__meta">.dmg</span>
+                    </a>
+                    <a href="https://github.com/mytory/mdbox/releases/download/v0.1.0/mytory-mdbox-v0.1.0-x64.dmg" class="platform-card__alt" target="_blank" rel="noopener">
+                        Intel (x64) 버전 →
+                    </a>
+                </div>
+                <a href="https://github.com/mytory/mdbox/releases/download/v0.1.0/mytory-mdbox-Setup-v0.1.0.exe" target="_blank" rel="noopener" class="platform-card">
+                    <svg class="platform-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="4" y="2" width="16" height="20" rx="2"/>
+                        <line x1="9" y1="2" x2="9" y2="22"/>
+                    </svg>
+                    <h3 class="platform-card__title">Windows</h3>
+                    <p class="platform-card__desc">64비트 설치 프로그램</p>
+                    <span class="platform-card__meta">.exe</span>
+                </a>
+                <a href="https://github.com/mytory/mdbox/releases/download/v0.1.0/mytory-mdbox-v0.1.0.AppImage" target="_blank" rel="noopener" class="platform-card">
+                    <svg class="platform-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5"/>
+                        <line x1="12" y1="22" x2="12" y2="12"/>
+                        <line x1="2" y1="8.5" x2="12" y2="12"/>
+                        <line x1="12" y1="12" x2="22" y2="8.5"/>
+                    </svg>
+                    <h3 class="platform-card__title">Linux</h3>
+                    <p class="platform-card__desc">AppImage 포터블</p>
+                    <span class="platform-card__meta">.AppImage</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Concept -->
+    <section class="concept" id="concept">
+        <div class="concept__inner">
+            <div class="concept__header">
+                <div class="concept__eyebrow">아이디어</div>
+                <h2 class="concept__title">또 <span class="concept__title--accent">변환기?</span></h2>
+            </div>
+            <div class="concept__body">
+                <p class="concept__text">
+                    모든 문서 변환기는 질문을 합니다. "어디에 저장할까요?" "어떤 형식으로?" "이미지를 포함할까요?" "어떤 옵션을 사용하시겠습니까?" — 이 질문에 답하는 동안 수동으로 해치웠을 시간입니다.
+                </p>
+                <p class="concept__text">
+                    <strong>Mytory MDBox는 질문하지 않습니다.</strong> 파일을 창에 드롭하면 Markdown이 원본 옆에 이미 기다리고 있습니다. 다이얼로그도, 설정도, 방해도 없습니다. 그냥 결과물입니다.
+                </p>
+                <p class="concept__text">
+                    내부적으로는 <strong>Microsoft Markitdown</strong>을 사용합니다 — AI 문서 처리를 위해 만들어진 바로 그 엔진입니다. DOCX부터 EPUB, PDF까지 모든 형식을 프로덕션 수준의 정확도로 처리합니다. 모든 작업은 로컬에서 실행되므로, 문서가 내 컴퓨터를 떠나지 않습니다.
+                </p>
+            </div>
+            <div class="concept__tags">
+                <span class="concept__tag">다이얼로그 없음</span>
+                <span class="concept__tag">100% 오프라인</span>
+                <span class="concept__tag">Microsoft Markitdown</span>
+                <span class="concept__tag">프라이버시 우선</span>
+                <span class="concept__tag">오픈소스</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Open Source -->
+    <section class="oss">
+        <div class="oss__inner">
+            <div class="oss__content">
+                <div class="oss__icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                </div>
+                <h2 class="oss__title">오픈소스</h2>
+                <p class="oss__desc">GPL-3.0 라이선스. Electron, Markitdown, PyInstaller로 제작. GitHub에서 기여, 이슈, 기능 제안을 환영합니다.</p>
+                <a href="https://github.com/mytory/mdbox" target="_blank" rel="noopener" class="btn btn--ghost">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                    </svg>
+                    GitHub에서 보기
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__inner">
+            <div class="footer__brand">
+                <span>Mytory MDBox</span>
+            </div>
+            <div class="footer__links">
+                <a href="https://github.com/mytory/mdbox/releases" target="_blank" rel="noopener">릴리즈</a>
+                <a href="https://github.com/mytory/mdbox/issues" target="_blank" rel="noopener">이슈</a>
+                <a href="https://github.com/mytory/mdbox/blob/main/LICENSE" target="_blank" rel="noopener">라이선스</a>
+                <a href="https://mytory.net" target="_blank" rel="noopener">mytory.net</a>
+            </div>
+            <p class="footer__copy">Made with &hearts; by mytory &middot; GPL-3.0</p>
+        </div>
+    </footer>
+
+    <script src="../script.js"></script>
+</body>
+</html>

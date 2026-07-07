@@ -1,6 +1,6 @@
 # Mytory MDBox
 
-**Drop any file. Get Markdown. No questions asked.**
+**파일을 드롭하면 Markdown이 나옵니다. 묻지도, 따지지도 않습니다.**
 
 Mytory MDBox는 파일을 드롭하면 즉시 Markdown으로 변환해 주는 크로스플랫폼 데스크톱 앱입니다.
 

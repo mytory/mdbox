@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en" data-mi18n-cloak>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mytory MDBox</title>
+    <title data-mi18n-ko="Mytory MDBox">Mytory MDBox</title>
     <link rel="stylesheet" href="app.css">
 </head>
-<body>
+<body data-mi18n-cloak>
     <div class="app-container">
         <!-- 상단: 작업 큐 (sticky) -->
         <section class="queue-panel" id="queuePanel">
             <div class="queue-header">
-                <h2 class="queue-title">작업 큐</h2>
+                <h2 class="queue-title" data-mi18n-ko="작업 큐">Task Queue</h2>
                 <span class="queue-count" id="queueCount">0</span>
             </div>
             <div class="queue-list" id="queueList">
-                <div class="queue-empty" id="queueEmpty">
-                    파일을 드롭하면 여기에 작업이 표시됩니다.
+                <div class="queue-empty" id="queueEmpty" data-mi18n-ko="파일을 드롭하면 여기에 작업이 표시됩니다.">
+                    Files you drop will appear here.
                 </div>
             </div>
         </section>
@@ -26,22 +26,22 @@
             <div class="global-drop-overlay" id="globalDropOverlay">
                 <div class="global-drop-overlay__content">
                     <div class="global-drop-overlay__icon">📄</div>
-                    <h2>파일을 놓아 변환</h2>
-                    <p>드롭한 모든 파일이 Markdown으로 변환됩니다</p>
+                    <h2 data-mi18n-ko="파일을 놓아 변환">Drop to Convert</h2>
+                    <p data-mi18n-ko="드롭한 모든 파일이 Markdown으로 변환됩니다">Every file you drop will be converted to Markdown</p>
                 </div>
             </div>
 
             <div class="dropzone" id="dropzone">
                 <div class="dropzone__icon">📄</div>
-                <h3 class="dropzone__title">파일을 드롭하세요</h3>
-                <p class="dropzone__desc">
-                    또는 클릭하여 파일 선택 &middot; 폴더도 가능
+                <h3 class="dropzone__title" data-mi18n-ko="파일을 드롭하세요">Drop your files here</h3>
+                <p class="dropzone__desc" data-mi18n-ko="또는 클릭하여 파일 선택 · 폴더도 가능">
+                    Or click to select files &middot; Folders work too
                 </p>
-                <button class="dropzone__btn" id="selectFilesBtn">파일 선택</button>
+                <button class="dropzone__btn" id="selectFilesBtn" data-mi18n-ko="파일 선택">Select Files</button>
                 <input type="file" id="fileInput" multiple hidden>
                 <input type="file" id="folderInput" webkitdirectory hidden>
-                <div class="dropzone__formats">
-                    지원: DOCX, PPTX, XLSX, PDF, HTML, CSV, JSON, XML, EPUB, IPYNB, TXT, ZIP, 이미지
+                <div class="dropzone__formats" data-mi18n-ko="지원: DOCX, PPTX, XLSX, PDF, HTML, CSV, JSON, XML, EPUB, IPYNB, TXT, ZIP, 이미지">
+                    Supports: DOCX, PPTX, XLSX, PDF, HTML, CSV, JSON, XML, EPUB, IPYNB, TXT, ZIP, Images
                 </div>
             </div>
         </main>
@@ -50,46 +50,60 @@
         <div class="modal-overlay hidden" id="settingsModal">
             <div class="modal">
                 <div class="modal__header">
-                    <h2>설정</h2>
+                    <h2 data-mi18n-ko="설정">Settings</h2>
                     <button class="modal__close" id="settingsClose">&times;</button>
                 </div>
                 <div class="modal__body">
+
+                    <!-- Language -->
                     <div class="setting-group">
-                        <label class="setting-label">출력 모드</label>
+                        <label class="setting-label" data-mi18n-ko="언어">Language</label>
+                        <select id="settingLang" class="setting-select">
+                            <option value="en">English</option>
+                            <option value="ko">한국어</option>
+                        </select>
+                    </div>
+                    <hr class="setting-divider">
+
+                    <div class="setting-group">
+                        <label class="setting-label" data-mi18n-ko="출력 모드">Output Mode</label>
                         <select id="settingOutputMode" class="setting-select">
-                            <option value="sidecar">Sidecar — 원본 폴더에 .md 생성</option>
-                            <option value="sidecar+clipboard">Sidecar + 클립보드 복사</option>
-                            <option value="custom">지정 폴더에 .md 생성</option>
-                            <option value="custom+clipboard">지정 폴더 + 클립보드 복사</option>
+                            <option value="sidecar" data-mi18n-ko="Sidecar — 원본 폴더에 .md 생성">Sidecar — save .md next to original</option>
+                            <option value="sidecar+clipboard" data-mi18n-ko="Sidecar + 클립보드 복사">Sidecar + Copy to clipboard</option>
+                            <option value="custom" data-mi18n-ko="지정 폴더에 .md 생성">Custom folder — save .md to specific folder</option>
+                            <option value="custom+clipboard" data-mi18n-ko="지정 폴더 + 클립보드 복사">Custom folder + Copy to clipboard</option>
                         </select>
                     </div>
                     <div class="setting-group hidden" id="outputDirGroup">
-                        <label class="setting-label">출력 폴더</label>
+                        <label class="setting-label" data-mi18n-ko="출력 폴더">Output Directory</label>
                         <div class="setting-dir-picker">
-                            <input type="text" id="settingOutputDir" class="setting-input" readonly placeholder="폴더를 선택하세요">
-                            <button class="setting-btn" id="settingOutputDirBtn">찾아보기</button>
+                            <input type="text" id="settingOutputDir" class="setting-input" readonly
+                                   data-mi18n-ko-attr-placeholder="폴더를 선택하세요" placeholder="Select a folder">
+                            <button class="setting-btn" id="settingOutputDirBtn" data-mi18n-ko="찾아보기">Browse</button>
                         </div>
                     </div>
                     <hr class="setting-divider">
                     <div class="setting-group">
-                        <label class="setting-label">LLM 제공자 (이미지 캡셔닝용, 선택사항)</label>
-                        <input type="text" id="settingLlmEndpoint" class="setting-input" placeholder="OpenAI API 키 또는 Ollama 엔드포인트 URL">
+                        <label class="setting-label" data-mi18n-ko="LLM 제공자 (이미지 캡셔닝용, 선택사항)">LLM Provider (for image captioning, optional)</label>
+                        <input type="text" id="settingLlmEndpoint" class="setting-input"
+                               data-mi18n-ko-attr-placeholder="OpenAI API 키 또는 Ollama 엔드포인트 URL"
+                               placeholder="OpenAI API key or Ollama endpoint URL">
                     </div>
                     <div class="setting-group">
-                        <label class="setting-label">LLM 모델명</label>
-                        <input type="text" id="settingLlmModel" class="setting-input" placeholder="예: gpt-4o, llama3.2-vision">
+                        <label class="setting-label" data-mi18n-ko="LLM 모델명">LLM Model</label>
+                        <input type="text" id="settingLlmModel" class="setting-input"
+                               data-mi18n-ko-attr-placeholder="예: gpt-4o, llama3.2-vision"
+                               placeholder="e.g. gpt-4o, llama3.2-vision">
                     </div>
                 </div>
                 <div class="modal__footer">
-                    <button class="modal__btn modal__btn--secondary" id="settingsCancel">취소</button>
-                    <button class="modal__btn modal__btn--primary" id="settingsSave">저장</button>
+                    <button class="modal__btn modal__btn--secondary" id="settingsCancel" data-mi18n-ko="취소">Cancel</button>
+                    <button class="modal__btn modal__btn--primary" id="settingsSave" data-mi18n-ko="저장">Save</button>
                 </div>
             </div>
         </div>
-
-        <!-- 토스트 알림 -->
-        <div class="toast-container" id="toastContainer"></div>
     </div>
+    <script src="mytory-i18n/mytory-i18n.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

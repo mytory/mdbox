@@ -607,6 +607,11 @@ body.dragover .global-drop-overlay {
 }
 
 /* ── Settings gear ───────────────────── */
+/* ── i18n cloak (prevent flash before translation) ── */
+[data-mi18n-cloak] {
+    visibility: hidden;
+}
+
 .settings-gear {
     position: fixed;
     top: 12px;

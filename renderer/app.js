@@ -1,6 +1,49 @@
 (function () {
     'use strict';
 
+    // ── Translations ────────────────────────────────────
+    const translations = {
+        'Pending': { en: 'Pending', ko: '대기 중' },
+        'Done': { en: 'Done', ko: '완료' },
+        'Failed': { en: 'Failed', ko: '실패' },
+        'Cancel': { en: 'Cancel', ko: '취소' },
+        'Cancel All': { en: 'Cancel All', ko: '전체 취소' },
+        'Clear All': { en: 'Clear All', ko: '모두 지우기' },
+        'Settings': { en: 'Settings', ko: '설정' },
+        'Saved': { en: 'Settings saved.', ko: '설정이 저장되었습니다.' },
+        'Converting': { en: 'Converting', ko: '변환 중' },
+    };
+
+    let currentLang = 'en';
+
+    function t(key) {
+        const entry = translations[key];
+        if (!entry) return key;
+        return entry[currentLang] || entry['en'] || key;
+    }
+
+    function detectLanguage() {
+        const saved = localStorage.getItem('mdbox-lang');
+        if (saved) return saved;
+        const nav = navigator.language || navigator.userLanguage || '';
+        if (nav.startsWith('ko')) return 'ko';
+        return 'en';
+    }
+
+    function applyLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('mdbox-lang', lang);
+        // Apply HTML translations via MytoryI18n
+        if (window.MytoryI18n) {
+            MytoryI18n.setLanguage(lang);
+        }
+        // Re-render dynamic content
+        renderQueue();
+        // Update settings modal language
+        const langSelect = document.getElementById('settingLang');
+        if (langSelect) langSelect.value = lang;
+    }
+
     // ── DOM refs ────────────────────────────────────────
     const dropzone = document.getElementById('dropzone');
     const dropzoneArea = document.getElementById('dropzoneArea');
@@ -45,8 +88,6 @@
     let unsubscribeQueue = null;
 
     // ── Queue rendering ─────────────────────────────────
-    let cancelBtnRef = null;
-
     function renderQueue() {
         const items = queueList.querySelectorAll('.queue-item');
         items.forEach(el => el.remove());
@@ -75,7 +116,7 @@
         if (hasActive) {
             const extra = document.createElement('span');
             extra.className = 'queue-header__extra';
-            extra.innerHTML = '<button class="queue-header__cancel-all">전체 취소</button>';
+            extra.innerHTML = '<button class="queue-header__cancel-all">' + t('Cancel All') + '</button>';
             extra.querySelector('.queue-header__cancel-all').addEventListener('click', () => {
                 mdboxAPI.cancelAll();
             });
@@ -98,7 +139,7 @@
         if (completedCount > 1) {
             const clearBtn = document.createElement('div');
             clearBtn.className = 'queue-clear-all';
-            clearBtn.innerHTML = '<button class="queue-clear-all__btn">✕ 모두 지우기</button>';
+            clearBtn.innerHTML = '<button class="queue-clear-all__btn">✕ ' + t('Clear All') + '</button>';
             clearBtn.querySelector('.queue-clear-all__btn').addEventListener('click', () => {
                 completedItems = [];
                 renderQueue();
@@ -127,13 +168,13 @@
         else if (item.status === 'error') statusIcon = '❌';
 
         const statusText =
-            item.status === 'done' ? '✅ 완료' :
-            item.status === 'error' ? '❌ 실패' :
+            item.status === 'done' ? '✅ ' + t('Done') :
+            item.status === 'error' ? '❌ ' + t('Failed') :
             item.status === 'converting' ? '' :
-            '대기 중';
+            t('Pending');
 
         const progressHtml = item.status === 'converting'
-            ? `<div class="queue-item__progress-bar"><div class="queue-item__progress-fill" style="width:${item.progress || 10}%"></div></div><button class="queue-item__cancel" title="취소">⏹</button>`
+            ? `<div class="queue-item__progress-bar"><div class="queue-item__progress-fill" style="width:${item.progress || 10}%"></div></div><button class="queue-item__cancel" title="${t('Cancel')}">⏹</button>`
             : statusText
                 ? `<span class="queue-item__progress">${statusText}</span>`
                 : '';
@@ -319,6 +360,8 @@
 
     async function openSettings() {
         settings = await mdboxAPI.getSettings();
+        const langEl = document.getElementById('settingLang');
+        if (langEl) langEl.value = currentLang;
         settingOutputMode.value = settings.outputMode || 'sidecar';
         settingOutputDir.value = settings.outputDir || '';
         settingLlmEndpoint.value = settings.llmEndpoint || '';
@@ -326,6 +369,13 @@
         toggleOutputDirField();
         settingsModal.classList.remove('hidden');
     }
+
+    // Language change handler
+    document.addEventListener('change', (e) => {
+        if (e.target.id === 'settingLang') {
+            applyLanguage(e.target.value);
+        }
+    });
 
     function closeSettings() {
         settingsModal.classList.add('hidden');
@@ -364,7 +414,7 @@
         await mdboxAPI.saveSettings(newSettings);
         settings = newSettings;
         closeSettings();
-        showToast('설정', '저장되었습니다.', 'success');
+        showToast(t('Settings'), t('Saved'), 'success');
     });
 
     // ── Queue events from main ──────────────────────────
@@ -444,6 +494,18 @@
         settings = await mdboxAPI.getSettings();
         const config = await mdboxAPI.getConfig();
         document.title = `Mytory MDBox v${config.version}`;
+
+        // Initialize i18n
+        const detectedLang = detectLanguage();
+        if (window.MytoryI18n) {
+            MytoryI18n.init({
+                lang: detectedLang,
+                defaultLang: 'en',
+                allowHtml: true,
+                autoApply: true,
+            });
+        }
+        applyLanguage(detectedLang);
     }
 
     init();
