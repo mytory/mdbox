@@ -1,0 +1,116 @@
+# GitHub Actions Release workflow
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  # 1. Linux 빌드 (AppImage)
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install system deps
+        run: sudo apt-get update && sudo apt-get install -y libxkbcommon0 libgbm1
+      - name: Install npm deps
+        run: npm ci
+      - name: Build Python binary
+        run: bash build/build-python.sh
+      - name: Build Electron app
+        run: npm run dist -- --linux --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: dist/*.AppImage
+
+  # 2. Windows 빌드 (Wine 컨테이너)
+  build-windows:
+    runs-on: ubuntu-latest
+    container:
+      image: electronuserland/builder:wine
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install npm deps
+        run: npm ci
+      - name: Build Python binary
+        run: bash build/build-python.sh
+      - name: Build Electron app
+        run: npm run dist -- --win --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: dist/*.exe
+
+  # 3. macOS 빌드 (Intel + Apple Silicon)
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install npm deps
+        run: npm ci
+      - name: Build Python binary
+        run: bash build/build-python.sh
+      - name: Build Electron app (universal)
+        run: npm run dist -- --mac --x64 --arm64 --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-build
+          path: dist/*.dmg
+
+  # 4. GitHub Release 생성 + 빌드 결과물 첨부
+  release:
+    needs:
+      - build-linux
+      - build-windows
+      - build-macos
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+      - name: Collect release assets
+        run: |
+          mkdir -p release-assets
+          find . -type f \( -name "*.AppImage" -o -name "*.exe" -o -name "*.dmg" \) -exec cp {} release-assets/ \;
+          echo "=== Release assets ==="
+          ls -lh release-assets/
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*
+          name: Mytory MDBox ${{ github.ref_name }}
+          body: |
+            Release ${{ github.ref_name }}
+
+            ### ⚠️ Security Warning (필독 / Please Read)
+
+            **English:**
+            This program is distributed by an individual developer and is not signed with a paid code signing certificate. The security warning you may see is not a defect. Please follow the instructions below to run the application.
+
+            *   **Windows:** Click **[More info]** on the red warning screen → Click **[Run anyway]**
+            *   **macOS:** Double-click the app → When the security alert appears, go to **System Settings → Privacy & Security** → Scroll down to the **Security** section → Click the **[Open Anyway]** button → Confirm in the dialog
+
+            **한국어:**
+            본 프로그램은 개인 개발자가 배포하는 오픈소스 소프트웨어로, 유료 개발자 인증서 서명이 되어 있지 않습니다. 실행 시 발생하는 보안 경고는 프로그램의 결함이 아니니 아래 방법으로 실행해 주세요.
+
+            *   **Windows:** 빨간색 경고창에서 **[추가 정보]** 클릭 → **[실행]** 버튼 클릭
+            *   **macOS:** 앱을 더블클릭 → 보안 경고 발생 시 **시스템 설정 → 개인정보 보호 및 보안** → **보안** 섹션 하단의 **[그래도 열기]** 버튼 클릭 → 확인 대화상자에서 확인
