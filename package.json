@@ -1,6 +1,6 @@
 {
   "name": "mytory-mdbox",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Drop any file. Get Markdown. No questions asked.",
   "main": "main.js",
   "scripts": {
@@ -11,7 +11,12 @@
     "build:python": "bash build/build-python.sh",
     "test:python": "python3 -m pytest tests/ -v"
   },
-  "keywords": ["markdown", "converter", "electron", "markitdown"],
+  "keywords": [
+    "markdown",
+    "converter",
+    "electron",
+    "markitdown"
+  ],
   "author": {
     "name": "mytory",
     "email": "mail@mytory.net",
@@ -20,8 +25,15 @@
   "license": "GPL-3.0-only",
   "type": "commonjs",
   "supportedArchitectures": {
-    "os": ["darwin", "linux", "win32"],
-    "cpu": ["x64", "arm64"]
+    "os": [
+      "darwin",
+      "linux",
+      "win32"
+    ],
+    "cpu": [
+      "x64",
+      "arm64"
+    ]
   },
   "devDependencies": {
     "electron": "^42.3.0",
@@ -46,7 +58,9 @@
     ],
     "mac": {
       "icon": "build/icon.png",
-      "target": ["dmg"],
+      "target": [
+        "dmg"
+      ],
       "artifactName": "${name}-v${version}-${arch}.${ext}",
       "category": "public.app-category.utilities",
       "hardenedRuntime": true,
@@ -54,7 +68,9 @@
     },
     "win": {
       "icon": "build/icon.ico",
-      "target": ["nsis"],
+      "target": [
+        "nsis"
+      ],
       "artifactName": "${name}-Setup-v${version}.${ext}"
     },
     "linux": {
