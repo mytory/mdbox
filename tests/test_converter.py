@@ -7,6 +7,8 @@ import subprocess
 import json
 import tempfile
 import os
+import sys
+import zipfile
 from pathlib import Path
 
 import pytest
@@ -20,7 +22,7 @@ def run_converter(file_path: str, llm_config: dict = None) -> dict:
     if llm_config:
         payload["llm_config"] = llm_config
     result = subprocess.run(
-        ["python3", str(CONVERTER)],
+        [sys.executable, str(CONVERTER)],
         input=json.dumps(payload),
         capture_output=True,
         text=True,
@@ -63,6 +65,41 @@ def html_file():
     os.unlink(path)
 
 
+@pytest.fixture
+def docx_file():
+    """Creates a minimal, valid .docx file with one paragraph."""
+    with tempfile.NamedTemporaryFile(suffix=".docx", delete=False) as f:
+        path = f.name
+
+    with zipfile.ZipFile(path, "w") as docx:
+        docx.writestr(
+            "[Content_Types].xml",
+            """<?xml version="1.0" encoding="UTF-8"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+</Types>""",
+        )
+        docx.writestr(
+            "_rels/.rels",
+            """<?xml version="1.0" encoding="UTF-8"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+</Relationships>""",
+        )
+        docx.writestr(
+            "word/document.xml",
+            """<?xml version="1.0" encoding="UTF-8"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+  <w:body><w:p><w:r><w:t>DOCX conversion works.</w:t></w:r></w:p></w:body>
+</w:document>""",
+        )
+
+    yield path
+    os.unlink(path)
+
+
 # ── Tests ─────────────────────────────────────────────────
 
 class TestBasicConversion:
@@ -89,6 +126,12 @@ class TestBasicConversion:
         assert "**world**" in result["markdown"]
         assert "Item 1" in result["markdown"]
 
+    def test_docx_to_markdown(self, docx_file):
+        """A valid .docx file should be converted to its text content."""
+        result = run_converter(docx_file)
+        assert result["success"] is True
+        assert "DOCX conversion works." in result["markdown"]
+
     def test_nonexistent_file_returns_error(self):
         """A file that doesn't exist should return success=false."""
         result = run_converter("/tmp/nonexistent_file_12345.xyz")
@@ -113,7 +156,7 @@ class TestLLMConfig:
         """Converter should work without llm_config."""
         payload = json.dumps({"file_path": text_file})
         result = subprocess.run(
-            ["python3", str(CONVERTER)],
+            [sys.executable, str(CONVERTER)],
             input=payload,
             capture_output=True,
             text=True,

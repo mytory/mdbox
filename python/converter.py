@@ -10,7 +10,21 @@ import io
 import json
 import sys
 import time
+import types
 from pathlib import Path
+
+# MarkItDown은 확장자로 판별 가능한 파일도 Magika/ONNX 모델을 항상 초기화합니다.
+# PyInstaller macOS 앱에서는 이 모델을 동적으로 읽는 데 수십 초가 걸릴 수 있으므로,
+# 여기서는 확장자 기반 판별을 사용합니다. 알 수 없는 형식은 기존의 일반 변환기로
+# 계속 처리됩니다.
+class _ExtensionOnlyMagika:
+    def identify_stream(self, _stream):
+        return types.SimpleNamespace(status="unknown")
+
+
+_magika_stub = types.ModuleType("magika")
+_magika_stub.Magika = _ExtensionOnlyMagika
+sys.modules.setdefault("magika", _magika_stub)
 
 from markitdown import MarkItDown
 

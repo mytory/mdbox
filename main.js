@@ -18,23 +18,43 @@ function unpackedPath(p) {
 
 function getConverterConfig() {
     const binaryName = process.platform === 'win32' ? 'converter.exe' : 'converter';
+    const binaryDirName = 'converter';
+    const venvPython = path.join(__dirname, '.venv', 'bin', 'python3');
+    const venvPythonWin = path.join(__dirname, '.venv', 'Scripts', 'python.exe');
+    const scriptPath = path.join(__dirname, 'python', 'converter.py');
 
-    // 1순위: PyInstaller 바이너리 (app.asar.unpacked > __dirname)
+    // 개발 모드에서는 검증 가능한 가상환경을 우선 사용한다. 로컬 PyInstaller
+    // 바이너리는 macOS에서 첫 동적 로딩이 지나치게 오래 걸릴 수 있다.
+    if (!app.isPackaged) {
+        if (fs.existsSync(venvPython)) {
+            return { cmd: venvPython, args: [scriptPath] };
+        }
+        if (fs.existsSync(venvPythonWin)) {
+            return { cmd: venvPythonWin, args: [scriptPath] };
+        }
+    }
+
+    // 1순위: PyInstaller onedir 바이너리 (시작 시 임시 압축 해제 지연 방지)
+    const bundledBinaryPath = unpackedPath(path.join(
+        __dirname, 'python', 'dist', binaryDirName, binaryName,
+    ));
+    if (fs.existsSync(bundledBinaryPath)) {
+        return { cmd: bundledBinaryPath, args: [] };
+    }
+
+    // 2순위: 이전 onefile PyInstaller 바이너리와의 호환성
     const binaryPath = unpackedPath(path.join(__dirname, 'python', 'dist', binaryName));
     if (fs.existsSync(binaryPath)) {
         return { cmd: binaryPath, args: [] };
     }
 
-    // 2순위: __dirname 그대로 (개발 모드)
+    // 3순위: __dirname 그대로 (개발 모드)
     const devBinaryPath = path.join(__dirname, 'python', 'dist', binaryName);
     if (fs.existsSync(devBinaryPath)) {
         return { cmd: devBinaryPath, args: [] };
     }
 
-    // 3순위: .venv의 python3 (개발 모드)
-    const venvPython = path.join(__dirname, '.venv', 'bin', 'python3');
-    const venvPythonWin = path.join(__dirname, '.venv', 'Scripts', 'python.exe');
-    const scriptPath = path.join(__dirname, 'python', 'converter.py');
+    // 4순위: .venv의 python3 (개발 모드)
     if (fs.existsSync(venvPython)) {
         return { cmd: venvPython, args: [scriptPath] };
     }
@@ -42,13 +62,13 @@ function getConverterConfig() {
         return { cmd: venvPythonWin, args: [scriptPath] };
     }
 
-    // 4순위: 시스템 python3 + unpacked converter.py
+    // 5순위: 시스템 python3 + unpacked converter.py
     const unpackedScript = unpackedPath(scriptPath);
     if (fs.existsSync(unpackedScript)) {
         return { cmd: 'python3', args: [unpackedScript] };
     }
 
-    // 5순위: 시스템 python3 + converter.py (실패 가능성 있음)
+    // 6순위: 시스템 python3 + converter.py (실패 가능성 있음)
     return { cmd: 'python3', args: [scriptPath] };
 }
 

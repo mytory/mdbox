@@ -7,7 +7,11 @@ from pathlib import Path
 
 import pytest
 
-BINARY = Path(__file__).parent.parent / "python" / "dist" / "converter"
+DIST_DIR = Path(__file__).parent.parent / "python" / "dist"
+BINARY = DIST_DIR / "converter" / ("converter.exe" if os.name == "nt" else "converter")
+if not BINARY.exists():
+    # 이전 onefile 출력물도 계속 검증할 수 있게 유지합니다.
+    BINARY = DIST_DIR / ("converter.exe" if os.name == "nt" else "converter")
 
 
 @pytest.mark.skipif(not BINARY.exists(), reason="PyInstaller binary not built")

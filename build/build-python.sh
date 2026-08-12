@@ -19,7 +19,13 @@ case "$(uname -s)" in
         ;;
     *)
         IS_WINDOWS=false
-        PYTHON_CMD="python3"
+        # PyInstaller does not yet reliably produce runnable macOS binaries
+        # with the latest Python release. Prefer the project-supported 3.12.
+        if command -v python3.12 &>/dev/null; then
+            PYTHON_CMD="python3.12"
+        else
+            PYTHON_CMD="python3"
+        fi
         ;;
 esac
 
@@ -44,6 +50,17 @@ else
         VENV_PYTHON="$VENV_DIR/bin/python3"
     fi
 
+    # Python 버전이 바뀌면 기존 venv의 인터프리터를 재사용하지 않는다.
+    # 특히 Python 3.14로 만든 PyInstaller 바이너리는 macOS에서 실행이 멈출 수 있다.
+    REQUESTED_PYTHON_VERSION=$($PYTHON_CMD -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
+    if [ -f "$VENV_PYTHON" ]; then
+        VENV_PYTHON_VERSION=$($VENV_PYTHON -c 'import sys; print(f"{sys.version_info.major}.{sys.version_info.minor}")')
+        if [ "$VENV_PYTHON_VERSION" != "$REQUESTED_PYTHON_VERSION" ]; then
+            echo "Recreating virtualenv for Python $REQUESTED_PYTHON_VERSION..."
+            rm -rf "$VENV_DIR"
+        fi
+    fi
+
     if [ ! -f "$VENV_PYTHON" ]; then
         echo "Creating Python virtualenv..."
         "$PYTHON_CMD" -m venv "$VENV_DIR"
@@ -66,33 +83,17 @@ fi
 # Build
 cd "$PROJECT_DIR/python"
 
-MAGIKA_DIR="$SITE_PACKAGES/magika"
-
-# PyInstaller path separator
-if [ "$IS_WINDOWS" = true ]; then
-    SEP=";"
-else
-    SEP=":"
+# 기존 onefile 출력물은 onedir 디렉터리와 이름이 충돌하므로 제거한다.
+OLD_BINARY="$PROJECT_DIR/python/dist/converter"
+if [ -f "$OLD_BINARY" ]; then
+    rm -f "$OLD_BINARY"
 fi
 
-if [ ! -d "$MAGIKA_DIR" ]; then
-    echo "Warning: magika not found at $MAGIKA_DIR, trying alternatives..."
-    # Try to find magika location
-    MAGIKA_DIR=$($PYTHON_CMD -c "import magika; import os; print(os.path.dirname(magika.__file__))" 2>/dev/null || echo "")
-    if [ -z "$MAGIKA_DIR" ]; then
-        echo "Error: cannot find magika package"
-        exit 1
-    fi
-    echo "Found magika at: $MAGIKA_DIR"
-fi
-
-$PYTHON_CMD -m PyInstaller --onefile --name converter converter.py \
-    --add-data "${MAGIKA_DIR}/config${SEP}magika/config" \
-    --add-data "${MAGIKA_DIR}/models${SEP}magika/models" \
-    --collect-data magika \
-    --hidden-import magika \
+$PYTHON_CMD -m PyInstaller --noconfirm --onedir --name converter converter.py \
+    --exclude-module magika \
+    --exclude-module onnxruntime \
     --distpath "$PROJECT_DIR/python/dist" \
     --workpath "$PROJECT_DIR/python/build" \
     --specpath "$PROJECT_DIR/python"
 
-echo "==> Build complete: $(ls -lh "$PROJECT_DIR/python/dist/converter" 2>/dev/null || ls -lh "$PROJECT_DIR/python/dist/converter.exe" 2>/dev/null || echo "check dist/")"
+echo "==> Build complete: $(ls -lh "$PROJECT_DIR/python/dist/converter/converter" 2>/dev/null || ls -lh "$PROJECT_DIR/python/dist/converter/converter.exe" 2>/dev/null || echo "check dist/")"
